@@ -13,6 +13,7 @@ type alias Model =
   , width : Width
   }
 
+
 type alias Color = String
 type alias Width = Int
 
@@ -53,6 +54,7 @@ onInput address action =
   --alternatively using the composition operator:
   --on "input" targetValue (Signal.message address << action)
 
+
 onRangeChange : Signal.Address a -> (Int -> a) -> Attribute
 onRangeChange address action =
   let
@@ -63,6 +65,7 @@ onRangeChange address action =
     on "input" targetValue (\val -> Signal.message address (action (safeToInt val)))
     --or with the composition operator:
     --on "input" targetValue (Signal.message address << action << safeToInt)
+
 
 view : Signal.Address Action -> Model -> Html
 view address model =

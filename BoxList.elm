@@ -16,6 +16,7 @@ type alias Model =
   , nextID: ID
   }
 
+
 type alias ID = Int
 
 
@@ -26,10 +27,38 @@ init =
   }
 
 
+newBox : ID -> ( ID, Box.Model )
+newBox id =
+  let
+    seed = Random.initialSeed id
+
+    rgbToColor : { alpha : Float, blue : Int, green : Int, red : Int } -> Box.Color
+    rgbToColor rgb =
+      "rgb(" ++
+        (toString rgb.red) ++ "," ++
+        (toString rgb.green) ++ "," ++
+        (toString rgb.blue) ++
+      ")"
+
+    randomColor : Box.Color
+    randomColor =
+      Random.generate Random.Color.rgb seed
+        |> fst
+        |> Color.toRgb
+        |> rgbToColor
+
+    randomWidth =
+      Random.generate (Random.int 200 1000) seed
+        |> fst
+  in
+    (id, Box.init randomColor randomWidth)
+
+
 -- UPDATE
 
 type Action
   = Add
+  | AddMultiple Int
   | RemoveAll
   | Modify ID Box.Action
 
@@ -38,34 +67,19 @@ update : Action -> Model -> Model
 update action model =
   case action of
     Add ->
+      { model |
+        boxes = model.boxes ++ [ newBox model.nextID ],
+        nextID = model.nextID + 1
+      }
+
+    AddMultiple amount ->
       let
-        seed = Random.initialSeed model.nextID
-
-        rgbToColor : { alpha : Float, blue : Int, green : Int, red : Int } -> Box.Color
-        rgbToColor rgb =
-          "rgb(" ++
-            (toString rgb.red) ++ "," ++
-            (toString rgb.green) ++ "," ++
-            (toString rgb.blue) ++
-          ")"
-
-        randomColor : Box.Color
-        randomColor =
-          Random.generate Random.Color.rgb seed
-            |> fst
-            |> Color.toRgb
-            |> rgbToColor
-
-        randomWidth =
-          Random.generate (Random.int 200 1000) seed
-            |> fst
-
-        newBox =
-          (model.nextID, Box.init randomColor randomWidth)
+        newBoxIds = [model.nextID .. model.nextID + amount]
+        newBoxes = List.map (\id -> newBox id) newBoxIds
       in
         { model |
-          boxes = model.boxes ++ [ newBox ],
-          nextID = model.nextID + 1
+          boxes = model.boxes ++ newBoxes,
+          nextID = model.nextID + amount + 1
         }
 
     RemoveAll ->
@@ -90,17 +104,19 @@ view address model =
   let
     boxes = List.map (renderBox address) model.boxes
     addButton = button [ onClick address Add ] [ text "Add new item"]
+    addManyButton = button [ onClick address (AddMultiple 10) ] [ text "Add many new items"]
     removeAllButton = button [ onClick address RemoveAll ] [ text "Remove all items"]
   in
     div
       []
       [ div
         []
-        [ addButton , removeAllButton ]
+        [ addButton, addManyButton, removeAllButton ]
       , div
         []
         boxes
       ]
+
 
 renderBox : Signal.Address Action -> (ID, Box.Model) -> Html
 renderBox address (id, model) =
