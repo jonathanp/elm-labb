@@ -1,6 +1,6 @@
 # Elm-labb
 
-This is the first project/demo I've made to learn the beautiful [Elm](http://elm-lang.org). The functionality is the same as in this [React demo](https://binarymuse.github.io/react-primer/build/index.html?6) since I figured it was a good fit for trying out the architecture.
+This is the first project/demo I've made to learn the beautiful [Elm](http://elm-lang.org) language. The functionality is the same as in this [React demo](https://binarymuse.github.io/react-primer/build/index.html?6) since I figured it was a good fit for trying out the architecture.
 
 
 ## How to build
