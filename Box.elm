@@ -5,9 +5,6 @@ import Html.Attributes exposing (attribute, style, value, type')
 import Html.Events exposing (on, targetValue)
 import String exposing (toInt)
 
-type alias Color = String
-type alias Width = Int
-
 
 -- MODEL
 
@@ -15,6 +12,10 @@ type alias Model =
   { color : Color
   , width : Width
   }
+
+type alias Color = String
+type alias Width = Int
+
 
 init : Color -> Width -> Model
 init color width =
@@ -28,6 +29,7 @@ init color width =
 type Action
   = ChangeColor Color
   | ChangeWidth Width
+
 
 update : Action -> Model -> Model
 update action model =
@@ -64,20 +66,16 @@ onRangeChange address action =
 
 view : Signal.Address Action -> Model -> Html
 view address model =
-  div
-    [ boxStyle model.color model.width ]
-    [ div
-      []
-      [ input
+  let
+    colorInput =
+      input
         [ type' "text"
         , value model.color
         , onInput address ChangeColor
         ]
         []
-      ]
-    , div
-      []
-      [ input
+    widthSlider =
+      input
         [ type' "range"
         , attribute "value" (toString model.width)
         , Html.Attributes.min "200"
@@ -85,11 +83,13 @@ view address model =
         , onRangeChange address ChangeWidth
         ]
         []
+  in
+    div
+      [ boxStyle model.color model.width ]
+      [ div [] [ colorInput ]
+      , div [] [ widthSlider ]
+      , div [] [ text ("Width: " ++ (toString model.width) ++ " px") ]
       ]
-    , div
-      []
-      [ text (toString model.width) ]
-    ]
 
 
 boxStyle : Color -> Width -> Attribute
