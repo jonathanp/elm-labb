@@ -2,6 +2,9 @@ module BoxList where
 
 import Html exposing (..)
 import Html.Events exposing (onClick)
+import Random
+import Random.Color
+import Color
 
 import Box
 
@@ -36,8 +39,27 @@ update action model =
   case action of
     Add ->
       let
-        randomColor = "red"
-        randomWidth = 400
+        seed = Random.initialSeed model.nextID
+
+        rgbToColor : { alpha : Float, blue : Int, green : Int, red : Int } -> Box.Color
+        rgbToColor rgb =
+          "rgb(" ++
+            (toString rgb.red) ++ "," ++
+            (toString rgb.green) ++ "," ++
+            (toString rgb.blue) ++
+          ")"
+
+        randomColor : Box.Color
+        randomColor =
+          Random.generate Random.Color.rgb seed
+            |> fst
+            |> Color.toRgb
+            |> rgbToColor
+
+        randomWidth =
+          Random.generate (Random.int 200 1000) seed
+            |> fst
+
         newBox =
           (model.nextID, Box.init randomColor randomWidth)
       in
