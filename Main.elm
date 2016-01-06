@@ -1,10 +1,10 @@
-import Box exposing (init, update, view)
+import BoxList exposing (init, update, view)
 import StartApp.Simple exposing (start)
 
 
 main =
   start
-    { model = init "red" 400
+    { model = init
     , update = update
     , view = view
     }
