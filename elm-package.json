@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "summary": "The first project/demo I've made to learn Elm",
-    "repository": "https://github.com/jonathanp/elm-labb.git",
+    "repository": "https://github.com/svenheden/elm-labb.git",
     "license": "MIT",
     "source-directories": [
         "."

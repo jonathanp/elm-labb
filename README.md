@@ -13,4 +13,4 @@ This is the first project/demo I've made to learn the beautiful [Elm](http://elm
 
 ## License
 
-MIT © [Jonathan Persson](https://github.com/jonathanp)
+MIT © [Jonathan Svenheden](https://github.com/svenheden)
